@@ -5,6 +5,7 @@ import belajar.spring.rest.api.model.LoginUserRequest;
 import belajar.spring.rest.api.model.TokenResponse;
 import belajar.spring.rest.api.repository.UserRepository;
 import belajar.spring.rest.api.security.BCrypt;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ public class AuthService {
     @Autowired
     private ValidationService validationService;
 
+    @Transactional
     public TokenResponse login(LoginUserRequest request){
         validationService.validate(request);
 
