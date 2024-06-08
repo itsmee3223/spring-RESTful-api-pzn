@@ -6,7 +6,7 @@ import belajar.spring.rest.api.model.UpdateUserRequest;
 import belajar.spring.rest.api.model.UserResponse;
 import belajar.spring.rest.api.repository.UserRepository;
 import belajar.spring.rest.api.security.BCrypt;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
