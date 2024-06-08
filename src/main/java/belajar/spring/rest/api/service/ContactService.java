@@ -4,6 +4,7 @@ import belajar.spring.rest.api.entity.Contact;
 import belajar.spring.rest.api.entity.User;
 import belajar.spring.rest.api.model.ContactResponse;
 import belajar.spring.rest.api.model.CreateContactRequest;
+import belajar.spring.rest.api.model.UpdateContactRequest;
 import belajar.spring.rest.api.repository.ContactRepository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,21 @@ public class ContactService {
         Contact contact = contactRepository.findFirstByUserAndId(user, id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found"));
 
+        return toContactResponse(contact);
+    }
+
+    @Transactional
+    public ContactResponse update(User user, UpdateContactRequest request){
+        validationService.validate(request);
+        Contact contact = contactRepository.findFirstByUserAndId(user, request.getId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found"));
+
+        contact.setFirstName(request.getFirstName());
+        contact.setLastName(request.getLastName());
+        contact.setEmail(request.getEmail());
+        contact.setPhone(request.getPhone());
+
+        contactRepository.save(contact);
         return toContactResponse(contact);
     }
 

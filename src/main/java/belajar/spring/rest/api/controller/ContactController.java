@@ -3,6 +3,7 @@ package belajar.spring.rest.api.controller;
 import belajar.spring.rest.api.entity.User;
 import belajar.spring.rest.api.model.ContactResponse;
 import belajar.spring.rest.api.model.CreateContactRequest;
+import belajar.spring.rest.api.model.UpdateContactRequest;
 import belajar.spring.rest.api.model.WebResponse;
 import belajar.spring.rest.api.service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,21 @@ public class ContactController {
     )
     public WebResponse<ContactResponse> get(User user, @PathVariable("contactId") String contactId) {
         ContactResponse contactResponse = contactService.get(user, contactId);
+        return WebResponse.<ContactResponse>builder().data(contactResponse).build();
+    }
+
+    @PutMapping(
+            path = "/api/contacts/{contactId}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<ContactResponse> update(User user,
+                                               @RequestBody UpdateContactRequest request,
+                                               @PathVariable("contactId") String contactId) {
+
+        request.setId(contactId);
+
+        ContactResponse contactResponse = contactService.update(user, request);
         return WebResponse.<ContactResponse>builder().data(contactResponse).build();
     }
 }
