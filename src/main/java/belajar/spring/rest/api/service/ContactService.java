@@ -7,8 +7,11 @@ import belajar.spring.rest.api.model.CreateContactRequest;
 import belajar.spring.rest.api.repository.ContactRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,6 +35,13 @@ public class ContactService {
         contact.setUser(user);
 
         contactRepository.save(contact);
+        return toContactResponse(contact);
+    }
+
+    public ContactResponse get(User user, String id){
+        Contact contact = contactRepository.findFirstByUserAndId(user, id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found"));
+
         return toContactResponse(contact);
     }
 
