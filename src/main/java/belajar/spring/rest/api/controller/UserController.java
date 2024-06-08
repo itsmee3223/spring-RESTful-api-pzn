@@ -2,15 +2,13 @@ package belajar.spring.rest.api.controller;
 
 import belajar.spring.rest.api.entity.User;
 import belajar.spring.rest.api.model.RegisterUserRequest;
+import belajar.spring.rest.api.model.UpdateUserRequest;
 import belajar.spring.rest.api.model.UserResponse;
 import belajar.spring.rest.api.model.WebResponse;
 import belajar.spring.rest.api.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -35,5 +33,17 @@ public class UserController {
     public WebResponse<UserResponse> get(User user){
         UserResponse response = userService.get(user);
         return WebResponse.<UserResponse>builder().data(response).build();
+    }
+
+    @PatchMapping(
+            path = "/api/users/current",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public WebResponse<UserResponse> update(User user, @RequestBody UpdateUserRequest request){
+        UserResponse userResponse = userService.update(user, request);
+        return WebResponse.<UserResponse>builder()
+                .data(userResponse)
+                .build();
     }
 }

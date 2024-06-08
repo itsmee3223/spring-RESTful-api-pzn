@@ -2,6 +2,7 @@ package belajar.spring.rest.api.service;
 
 import belajar.spring.rest.api.entity.User;
 import belajar.spring.rest.api.model.RegisterUserRequest;
+import belajar.spring.rest.api.model.UpdateUserRequest;
 import belajar.spring.rest.api.model.UserResponse;
 import belajar.spring.rest.api.repository.UserRepository;
 import belajar.spring.rest.api.security.BCrypt;
@@ -11,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Set;
+import java.util.Objects;
 
 @Service
 
@@ -41,6 +42,26 @@ public class UserService {
         return UserResponse.builder()
                 .name(user.getName())
                 .username(user.getUsername())
+                .build();
+    }
+
+    @Transactional
+    public UserResponse update(User user, UpdateUserRequest request){
+        validationService.validate(request);
+
+        if(Objects.nonNull(request.getName())){
+            user.setName(request.getName());
+        }
+
+        if(Objects.nonNull(request.getPassword())){
+            user.setPassword(BCrypt.hashpw(request.getPassword(), BCrypt.gensalt()));
+        }
+
+        userRepository.save(user);
+
+        return UserResponse.builder()
+                .username(user.getUsername())
+                .name(user.getName())
                 .build();
     }
 }
