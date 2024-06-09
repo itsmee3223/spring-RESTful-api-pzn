@@ -5,6 +5,8 @@ import belajar.spring.rest.api.entity.Contact;
 import belajar.spring.rest.api.entity.User;
 import belajar.spring.rest.api.model.AddressResponse;
 import belajar.spring.rest.api.model.CreateAddressRequest;
+import belajar.spring.rest.api.model.UpdateAddressRequest;
+import belajar.spring.rest.api.model.UpdateContactRequest;
 import belajar.spring.rest.api.repository.AddressRepository;
 import belajar.spring.rest.api.repository.ContactRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +43,25 @@ public class AddressService {
         address.setCountry(request.getCountry());
         address.setPostalCode(request.getPostalCode());
 
+        addressRepository.save(address);
+
+        return toAddressResponse(address);
+    }
+
+    @Transactional
+    public AddressResponse update(User user, UpdateAddressRequest request){
+        validationService.validate(request);
+        Contact contact = contactRepository.findFirstByUserAndId(user, request.getContactId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Contact not found"));
+
+        Address address = addressRepository.findFirstByContactAndId(contact, request.getAddressId()).orElseThrow(
+                () -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found"));
+
+        address.setStreet(request.getStreet());
+        address.setCity(request.getCity());
+        address.setProvince(request.getProvince());
+        address.setCountry(request.getCountry());
+        address.setPostalCode(request.getPostalCode());
         addressRepository.save(address);
 
         return toAddressResponse(address);
